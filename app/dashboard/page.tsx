@@ -1,25 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+interface User {
+  name: string;
+  email: string;
+  picture: string;
+}
+
 const DashboardPage = () => {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      router.push("/login");
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
+        router.push("/login");
+      } else {
+        setUser(JSON.parse(storedUser));
+      }
     }
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    router.push("/login");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user");
+      router.push("/login");
+    }
   };
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  if (!user) {
+    return null; // Render nothing while waiting for user data
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
