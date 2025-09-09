@@ -10,6 +10,10 @@ interface User {
   picture: string;
 }
 
+const customLoader = ({ src }: { src: string }) => {
+  return src;
+};
+
 const DashboardPage = () => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -46,11 +50,15 @@ const DashboardPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md text-center">
         <Image
-          src={user.picture}
+          loader={customLoader}
+          src={user.picture || "/fallback-profile.png"}
           alt="User Profile"
           width={96}
           height={96}
           className="rounded-full mx-auto mb-4 border-4 border-blue-500"
+          onError={(e) => {
+            e.currentTarget.src = "/fallback-profile.png";
+          }}
         />
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-2">
           Welcome, {user.name}!
