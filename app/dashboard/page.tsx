@@ -25,6 +25,12 @@ const DashboardPage = () => {
     }
   }, [router]);
 
+  useEffect(() => {
+    if (user) {
+      console.log("User picture URL:", user.picture);
+    }
+  }, [user]);
+
   const handleLogout = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("user");
